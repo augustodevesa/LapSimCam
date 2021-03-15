@@ -5,7 +5,10 @@
     <meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJlb3df6fb08db743a1997b672b692ab51d">
     <title>MedicalBit LapSim Cam viewer</title>
     <meta name="CamViewer" content="Visualizador de Camara Endoscopica">
+    <link rel="stylesheet" href="CamRecStyle.css" type="text/css"/>
+    <!-- 
     <style type="text/css">
+    /* 
   html,
   header {
     position:fixed;
@@ -48,8 +51,10 @@
     height: 64px;
     }
 
-  
   </style>
+
+  -->
+
   </head>
   <header>
     <div> <img src="logo-medicalbit.ico" class="MBlogo" style="width: 134px; height: 61px;">
@@ -58,104 +63,103 @@
 
   <body class="htmlNoPages">
     
-    <div id="container"> 
+    <div id="container">       
+        <video id="video" style="display:none" autoplay="autoplay" playsinline=""></video> 
+    </div>
+    
 
-        
-        
-        <video id="video" style="display:none" autoplay="autoplay" playsinline=""></video> </div>
     <script type="module">
 
-import * as THREE from './three.module.js';
+    import * as THREE from './three.module.js';
 
-let camera, scene, renderer, video;
+    let camera, scene, renderer, video;
 
-init();
-animate();
+    init();
+    animate();
 
-function init() {
+    function init() {
 
-  const aspect = window.innerWidth / window.innerHeight;
-  let container = document.getElementById( 'container' );
-
-
-
-// CONFIGS DE LA CAMARA PARA VER LA ESCENA
-  camera = new THREE.PerspectiveCamera( 60, aspect, 0.1, 100 );
-  camera.position.z = 10;
-  camera.position.x = 0;
-  camera.position.y = 0;
+      const aspect = window.innerWidth / window.innerHeight;
+      let container = document.getElementById( 'container' );
 
 
 
-// CONFIGS DEL PLANO DONDE PROYECTO EL VIDEO
+      // CONFIGS DE LA CAMARA PARA VER LA ESCENA
+      camera = new THREE.PerspectiveCamera( 60, aspect, 0.1, 100 );
+      camera.position.z = 10;
+      camera.position.x = 0;
+      camera.position.y = 0;
+
+
+
+      // CONFIGS DEL PLANO DONDE PROYECTO EL VIDEO
   
-  const geometry = new THREE.PlaneGeometry( 16, 9 );
-  geometry.scale( 1, 1, 1);
+      const geometry = new THREE.PlaneGeometry( 16, 9 );
+      geometry.scale( 1, 1, 1);
   
-  video = document.getElementById( 'video' );
-  const texture = new THREE.VideoTexture( video );
-  const material = new THREE.MeshBasicMaterial( { map: texture } );
+      video = document.getElementById( 'video' );
+      const texture = new THREE.VideoTexture( video );
+      const material = new THREE.MeshBasicMaterial( { map: texture } );
   
-  const mesh = new THREE.Mesh( geometry, material );
-  mesh.position.set( 0, 0, 0 );
+      const mesh = new THREE.Mesh( geometry, material );
+      mesh.position.set( 0, 0, 0 );
 
-  mesh.lookAt( camera.position );
+      mesh.lookAt( camera.position );
   
-// CREACION DE LA ESCENA
+      // CREACION DE LA ESCENA
 
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color( 0xffffff );
-  scene.add( mesh );
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color( 0xffffff );
+      scene.add( mesh );
 
-// ACCIIONES DE RENDERIZADO DE LA ESCENA
+      // ACCIIONES DE RENDERIZADO DE LA ESCENA
 
-  renderer = new THREE.WebGLRenderer( { antialias: true } );
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
-  container.appendChild( renderer.domElement );
+      renderer = new THREE.WebGLRenderer( { antialias: true } );
+      renderer.setPixelRatio( window.devicePixelRatio );
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      container.appendChild( renderer.domElement );
 
-  // ACCIONES DE REAJUSTE EN CASO DE CAMBIAR EL TAMAÑO DE LA ESCENA
+      // ACCIONES DE REAJUSTE EN CASO DE CAMBIAR EL TAMAÑO DE LA ESCENA
 
-  window.addEventListener( 'resize', onWindowResize );
+      window.addEventListener( 'resize', onWindowResize );
 
-  // CAPTURO EL VIDEO Y LA CAMARA
+      // CAPTURO EL VIDEO Y LA CAMARA
 
-  if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia ) {
+      if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia ) {
 
-    const constraints = { 
-      audio: false,
-      video: { 
-        //width: 1280, 
-        //height: 720,
-        /// by default FullHD (ideal), max. 4k
-        width: { min: 1280, ideal: 1920, max: 4096 },
-        height: { min: 720, ideal: 1080, max: 2160 }, 
-        facingMode: { ideal: "environment" }
-      } 
-    };
+        const constraints = { 
+          audio: false,
+          video: { 
+          //width: 1280, 
+          //height: 720,
+          /// by default FullHD (ideal), max. 4k
+          width: { min: 1280, ideal: 1920, max: 4096 },
+          height: { min: 720, ideal: 1080, max: 2160 }, 
+          facingMode: { ideal: "environment" }
+          } 
+        };
 
-    navigator.mediaDevices.getUserMedia( constraints )
-      .then( 
-        function ( stream ) {
+        navigator.mediaDevices.getUserMedia( constraints )
+        .then( 
+          function ( stream ) {
 
         // apply the stream to the video element used in the texture
 
-        video.srcObject = stream;
-        video.play();
+            video.srcObject = stream;
+            video.play();
+          } 
+        ).catch( 
+          function ( error ) {
+            console.error( 'Unable to access the camera/webcam.', error );
+            } 
+        );
+      } else {
 
-        } 
-      ).catch( 
-        function ( error ) {
-          console.error( 'Unable to access the camera/webcam.', error );
-        } 
-      );
-  } else {
+          console.error( 'MediaDevices interface not available.' );
 
-    console.error( 'MediaDevices interface not available.' );
+      }
 
-  }
-
-}
+    }
 
 function onWindowResize() {
 
@@ -173,10 +177,39 @@ function animate() {
 
 }
 
-</script>
+    </script>
+
+  <h2> Grabar </h2>
+  <div id="controles">
+    <div class="left">
+      <!--  -->   
+      <div id="startButton" class="button"> Iniciar </div>
+      <!-- <video id="preview" width="160" height="120" autoplay muted></video> -->
+    </div>
+
+    <div class="right">
+      <!-- <h2>Recording</h2> -->
+      <div id="stopButton" class="button"> Parar </div>
+      <!-- <video id="recording" width="160" height="120" controls></video> -->      
+      
+    </div>
+
+    <div class="center"> 
+      <a id="downloadButton" class="button"> Descargar </a>
+
+    </div>
+
+
+</div>
+
+
+
+    <div class="bottom">
+    <pre id="log"> </pre> 
+    </div>
   </body>
 <footer>
-<div>
+  <div id="logos" >
   <!-- 
       <img src="logo_COLPOSAN.png" class="gwd-img-lnt7">
   -->
@@ -189,8 +222,9 @@ function animate() {
   <img src="https://i.imgur.com/KyP1ANN.png" class="gwd-img-ohqw">
 
 
-</div>
+  </div>
 
+ 
 </footer>
 
 

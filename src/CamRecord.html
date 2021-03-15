@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="GCD" content="YTk3ODQ3ZWZhN2I4NzZmMzBkNTEwYjJlb3df6fb08db743a1997b672b692ab51d">
+    <title>MedicalBit LapSim Cam viewer</title>
+    <meta name="CamRecoder" content="Visualizador de Camara Endoscopica">
+
+    <!-- <<Attched Stylesheets>> -->
+    <link rel="stylesheet" href="CamRecStyle.css" type="text/css" />
+
+
+</head>
+
+<header></header>
+<body>
+    <div class="left">
+        <div id="startButton" class="button">
+          Start
+        </div>
+        <h2>Preview</h2>
+        <video id="preview" width="160" height="120" autoplay muted></video>
+      </div>
+
+      <div class="right">
+        <div id="stopButton" class="button">
+          Stop
+        </div>
+        <h2>Recording</h2>
+        <video id="recording" width="160" height="120" controls></video>
+        <a id="downloadButton" class="button">
+          Download
+        </a>
+      </div>
+      <div class="bottom">
+        <pre id="log">
+        </pre>
+      </div>
+
+    
+      <script type="text/javascript" src="./CamRecord.js"></script>
+
+
+
+
+</body>
+<footer></footer>
