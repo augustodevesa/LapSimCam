@@ -128,22 +128,18 @@ function registrarPractica () {
     .catch(log);
 
     */
-
-
-   
-
-   
    // .then(recordedChunks => {
 
       var recordedChunks = [];
+      let i = new Promise(resolve => video.onplaying = resolve);
 
-      recordedChunks = startRecording(video.captureStream(),recordingTimeMS);
+      let strm = video.captureStream ? video.captureStream() : video.mozCaptureStream()
+      recordedChunks = startRecording(strm,recordingTimeMS);
 
       let recordedBlob = new Blob([recordedChunks], { type: "video/mp4" });
 
-     // let recordedBlob = new Blob(startRecording(video.captureStream(),recordingTimeMS), { type: "video/mp4" });
-      //recording.src = URL.createObjectURL(recordedBlob);
-      downloadButton.href = video.src;
+      recording.src = URL.createObjectURL(recordedBlob);
+      downloadButton.href = recording.src;
       downloadButton.download = "RecordedVideo.mp4";
 
       log("Se grabó exitosamente un archivo " + recordedBlob.size + " de bytes " +
@@ -274,7 +270,7 @@ function init() {
 
         video.srcObject = stream;
         downloadButton.href = stream;
-        //video.captureStream = video.captureStream || video.mozCaptureStream;
+        video.captureStream = video.captureStream || video.mozCaptureStream;
         video.play();
       } 
     ).catch( 
