@@ -1,4 +1,4 @@
-// GLOBAL VARIABLES
+ // GLOBAL VARIABLES
 
 let preview = document.getElementById("preview");
 let recording = document.getElementById("recording");
@@ -6,8 +6,14 @@ let startButton = document.getElementById("startButton");
 let stopButton = document.getElementById("stopButton");
 let downloadButton = document.getElementById("downloadButton");
 let logElement = document.getElementById("log");
-
 let recordingTimeMS = 5000;
+
+import * as THREE from './three.module.js';
+const aspect = window.innerWidth / window.innerHeight;
+let container = document.getElementById( 'container' );
+
+let camera, scene, renderer, video;
+
 
 // DECLARACION DE UTILITY FUNCTIONS
 
@@ -28,6 +34,8 @@ function log(msg) {
 
 
 //function startRecording(stream, lengthInMS) {
+
+
 function startRecording(stream) {
 
   let recorder = new MediaRecorder(stream);
@@ -75,7 +83,8 @@ and is rejected if its onerror event handler is called.
 Creates a new Promise, named recorded, which is resolved when the specified number of milliseconds have elapsed.
  Upon resolution, it stops the MediaRecorder if it's recording.
 ## Lines 18-22
-These lines create a new Promise which is fulfilled when both of the two Promises (stopped and recorded) have resolved. Once that resolves, the array data is returned by startRecording() to its caller.
+These lines create a new Promise which is fulfilled when both of the two Promises (stopped and recorded) have resolved.
+ Once that resolves, the array data is returned by startRecording() to its caller.
 */ 
 
 
@@ -86,8 +95,7 @@ function stop(stream) {
   stream.getTracks().forEach(track => track.stop());
 }
 
-/*
-This works by calling MediaStream.getTracks(), using forEach() to call MediaStreamTrack.stop() on each track in the stream.
+/* This works by calling MediaStream.getTracks(), using forEach() to call MediaStreamTrack.stop() on each track in the stream.
 */
 
 
@@ -95,42 +103,85 @@ This works by calling MediaStream.getTracks(), using forEach() to call MediaStre
 //Now let's look at the most intricate piece of code in this example: our event handler for clicks on the start button:
 
 
-startButton.addEventListener("click", function() {
-  navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true
-  })
-  .then(stream => {
-    preview.srcObject = stream;
-    downloadButton.href = stream;
-    preview.captureStream = preview.captureStream || preview.mozCaptureStream;
-    return new Promise(resolve => preview.onplaying = resolve);
-  })
-  .then(() => startRecording(preview.captureStream(), recordingTimeMS))
-  .then (recordedChunks => {
-    let recordedBlob = new Blob(recordedChunks, { type: "video/mp4" });
-    recording.src = URL.createObjectURL(recordedBlob);
-    downloadButton.href = recording.src;
-    downloadButton.download = "RecordedVideo.mp4";
 
-    log("Se grabó exitosamente un archivo " + recordedBlob.size + " de bytes " +
+function registrarPractica () {
+  /*   navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true
+    })
+    .then(stream => {
+      preview.srcObject = stream;
+      downloadButton.href = stream;
+      preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+      return new Promise(resolve => preview.onplaying = resolve);
+    })
+    .then(() => startRecording(preview.captureStream(), recordingTimeMS))
+    .then (recordedChunks => {
+      let recordedBlob = new Blob(recordedChunks, { type: "video/mp4" });
+      recording.src = URL.createObjectURL(recordedBlob);
+      downloadButton.href = recording.src;
+      downloadButton.download = "RecordedVideo.mp4";
+  
+      log ("Se grabó exitosamente un archivo " + recordedBlob.size + " de bytes " +
+          recordedBlob.type + " de video");
+    })
+    .catch(log);
+
+    */
+
+
+   
+
+   
+   // .then(recordedChunks => {
+
+      var recordedChunks = [];
+
+      recordedChunks = startRecording(video.captureStream(),recordingTimeMS);
+
+      let recordedBlob = new Blob([recordedChunks], { type: "video/mp4" });
+
+     // let recordedBlob = new Blob(startRecording(video.captureStream(),recordingTimeMS), { type: "video/mp4" });
+      //recording.src = URL.createObjectURL(recordedBlob);
+      downloadButton.href = video.src;
+      downloadButton.download = "RecordedVideo.mp4";
+
+      log("Se grabó exitosamente un archivo " + recordedBlob.size + " de bytes " +
         recordedBlob.type + " de video");
-  })
-  .catch(log);
-}, false);
+      //}
+    
+
+
+  }
+
 
 /*
 When a click event occurs, here's what happens:
 
+
 Lines 2-4
 navigator.mediaDevices.getUserMedia() is called to request a new MediaStream that has both video and audio tracks. This is the stream we'll record.
 Lines 5-9
-Whspoen the Promise returned by getUserMedia() is resolved, the preview <video> element's srcObject property is set to be the input stream, which causes the video being captured by the user's camera to be displayed in the preview box. Since the <video> element is muted, the audio won't play. The "Download" button's link is then set to refer to the stream as well. Then, in line 8, we arrange for preview.captureStream() to call preview.mozCaptureStream() so that our code will work on Firefox, on which the MediaRecorder.captureStream() method is prefixed. Then a new Promise which resolves when the preview video starts to play is created and returned.
+Whspoen the Promise returned by getUserMedia() is resolved, the preview <video> element's srcObject property is set to be the input 
+stream, which causes the video being captured by the user's camera to be displayed in the preview box. 
+Since the <video> element is muted, the audio won't play. The "Download" button's link is then set to refer to the stream as well.
+Then, in line 8, we arrange for preview.captureStream() to call preview.mozCaptureStream() so that our code will work on Firefox,
+on which the MediaRecorder.captureStream() method is prefixed. Then a new Promise which resolves when the preview video starts to play
+is created and returned.
 Line 10
-When the preview video begins to play, we know there's media to record, so we respond by calling the startRecording() function we created earlier, passing in the preview video stream (as the source media to be recorded) and recordingTimeMS as the number of milliseconds of media to record. As mentioned before, startRecording() returns a Promise whose resolution handler is called (receiving as input an array of Blob objects containing the chunks of recorded media data) once recording has completed.
+When the preview video begins to play, we know there's media to record, so we respond by calling the startRecording() function 
+we created earlier, passing in the preview video stream (as the source media to be recorded) and recordingTimeMS as the number 
+of milliseconds of media to record. As mentioned before, startRecording() returns a Promise whose resolution handler is called 
+(receiving as input an array of Blob objects containing the chunks of recorded media data) once recording has completed.
 Lines 11-15
-The recording process's resolution handler receives as input an array of media data Blobs locally known as recordedChunks. The first thing we do is merge the chunks into a single Blob whose MIME type is "video/webm" by taking advantage of the fact that the Blob() constructor concatenates arrays of objects into one object. Then URL.createObjectURL() is used to create an URL that references the blob; this is then made the value of the recorded video playback element's src attribute (so that you can play the video from the blob) as well as the target of the download button's link.
-Then the download button's download attribute is set. While the download attribute can be a Boolean, you can also set it to a string to use as the name for the downloaded file. So by setting the download link's download attribute to "RecordedVideo.webm", we tell the browser that clicking the button should download a file named "RecordedVideo.webm" whose contents are the recorded video.
+The recording process's resolution handler receives as input an array of media data Blo bs locally known as recordedChunks.
+ The first thing we do is merge the chunks into a single Blob whose MIME type is "video/webm" by taking advantage of the fact that
+the Blob() constructor concatenates arrays of objects into one object. Then URL.createObjectURL() is used to create an URL that 
+references the blob; this is then made the value of the recorded video playback element's src attribute (so that you can play 
+the video from the blob) as well as the target of the download button's link.
+Then the download button's download attribute is set. While the download attribute can be a Boolean, you can also set it to a 
+string to use as the name for the downloaded file. So by setting the download link's download attribute to "RecordedVideo.webm", 
+we tell the browser that clicking the button should download a file named "RecordedVideo.webm" whose contents are the recorded video.
 
 Lines 17-18
 The size and type of the recorded media are output to the log area below the two videos and the download button.
@@ -139,11 +190,126 @@ The catch() for all the Promises outputs the error to the logging area by callin
 */
 
 
+
+function onWindowResize() {
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  
+  }
+
+
+// FUNCION ANIMATE QUE CONTRULLE LA PANTALLA LA ESCENA Y CREA EL VIDEO
+
+function init() {
+
+  // const aspect = window.innerWidth / window.innerHeight;
+  // let container = document.getElementById( 'container' );
+
+
+
+  // CONFIGS DE LA CAMARA PARA VER LA ESCENA
+  camera = new THREE.PerspectiveCamera( 60, aspect, 0.1, 100 );
+  camera.position.z = 10;
+  camera.position.x = 0;
+  camera.position.y = 0;
+
+
+
+  // CONFIGS DEL PLANO DONDE PROYECTO EL VIDEO
+
+  const geometry = new THREE.PlaneGeometry( 16, 9 );
+  geometry.scale( 1, 1, 1);
+
+  video = document.getElementById( 'video' );
+  const texture = new THREE.VideoTexture( video );
+  const material = new THREE.MeshBasicMaterial( { map: texture } );
+
+  const mesh = new THREE.Mesh( geometry, material );
+  mesh.position.set( 0, 0, 0 );
+
+  mesh.lookAt( camera.position );
+
+  // CREACION DE LA ESCENA
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color( 0xffffff );
+  scene.add( mesh );
+
+  // ACCIIONES DE RENDERIZADO DE LA ESCENA
+
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  container.appendChild( renderer.domElement );
+
+  // ACCIONES DE REAJUSTE EN CASO DE CAMBIAR EL TAMAÑO DE LA ESCENA
+
+  window.addEventListener( 'resize', onWindowResize );
+
+  // CAPTURO EL VIDEO Y LA CAMARA
+
+  if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia ) {
+
+    const constraints = { 
+      audio: false,
+      video: { 
+      //width: 1280, 
+      //height: 720,
+      /// by default FullHD (ideal), max. 4k
+      width: { min: 1280, ideal: 1920, max: 4096 },
+      height: { min: 720, ideal: 1080, max: 2160 }, 
+      facingMode: { ideal: "environment" }
+      } 
+    };
+
+    navigator.mediaDevices.getUserMedia( constraints )
+    .then( 
+      function ( stream ) {
+
+    // apply the stream to the video element used in the texture
+    // preparo para que se pueda grabar
+
+        video.srcObject = stream;
+        downloadButton.href = stream;
+        //video.captureStream = video.captureStream || video.mozCaptureStream;
+        video.play();
+      } 
+    ).catch( 
+      function ( error ) {
+        console.error( 'Unable to access the camera/webcam.', error );
+        } 
+    );
+  } else {
+
+      console.error( 'MediaDevices interface not available.' );
+
+  }
+
+}
+
+
+
+function animate() {
+
+requestAnimationFrame( animate );
+renderer.render( scene, camera );
+
+}
+
+// Cuando se pulsa el boton de registrar practica se dispara la funcion que grabara el video.
+
+ startButton.addEventListener("click", registrarPractica , false);
+
+
+
 // Handling the stop button
 // The last bit of code adds a handler for the click event on the stop button using addEventListener():
 
-stopButton.addEventListener("click", function() {
-  stop(preview.srcObject);
+stopButton.addEventListener("click", () => {
+  stop(video.srcObject);
 }, false);
 
 /*
@@ -151,3 +317,5 @@ This calls the stop() function we covered earlier.
 */
 
 
+init();
+animate();
