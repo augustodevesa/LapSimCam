@@ -1,8 +1,8 @@
-import * as THREE from './three.module.js';
-const aspect = window.innerWidth / window.innerHeight;
+//import * as THREE from './three.module.js';
+//const aspect = window.innerWidth / window.innerHeight;
 let container = document.getElementById("container" );
 
-let camera, scene, renderer;
+//let camera, scene, renderer;
 
 var mediaRecorder;
 var recordedBlobs;
@@ -33,7 +33,7 @@ function onWindowResize() {
   
   
   // FUNCION ANIMATE QUE CONTRULLE LA PANTALLA LA ESCENA Y CREA EL VIDEO
-  
+/*  
 function init() {
   
     // const aspect = window.innerWidth / window.innerHeight;
@@ -94,7 +94,7 @@ function animate() {
 //init();
 //animate();
 
-
+*/
 
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
