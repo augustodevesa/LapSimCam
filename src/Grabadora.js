@@ -1,8 +1,24 @@
 import * as THREE from './three.module.js';
 const aspect = window.innerWidth / window.innerHeight;
-let container = document.getElementById( 'container' );
+let container = document.getElementById("container" );
 
-let camera, scene, renderer, video;
+let camera, scene, renderer;
+
+var mediaRecorder;
+var recordedBlobs;
+var sourceBuffer;
+
+var gumVideo = document.querySelector('video#gum');
+var recordedVideo = document.querySelector('video#recorded');
+
+//var recordButton = document.querySelector('button#record');
+//var playButton = document.querySelector('button#play');
+//var downloadButton = document.querySelector('button#download');
+
+var recordButton = document.getElementById('record');
+var playButton = document.getElementById('play');
+var downloadButton = document.getElementById('download');
+
 
 
 
@@ -18,7 +34,7 @@ function onWindowResize() {
   
   // FUNCION ANIMATE QUE CONTRULLE LA PANTALLA LA ESCENA Y CREA EL VIDEO
   
-  function init() {
+function init() {
   
     // const aspect = window.innerWidth / window.innerHeight;
     // let container = document.getElementById( 'container' );
@@ -38,8 +54,7 @@ function onWindowResize() {
     const geometry = new THREE.PlaneGeometry( 16, 9 );
     geometry.scale( 1, 1, 1);
   
-    video = document.getElementById( 'video' );
-    const texture = new THREE.VideoTexture( video );
+    const texture = new THREE.VideoTexture( gumVideo );
     const material = new THREE.MeshBasicMaterial( { map: texture } );
   
     const mesh = new THREE.Mesh( geometry, material );
@@ -63,104 +78,46 @@ function onWindowResize() {
     // ACCIONES DE REAJUSTE EN CASO DE CAMBIAR EL TAMAÑO DE LA ESCENA
   
     window.addEventListener( 'resize', onWindowResize );
-  
-    // CAPTURO EL VIDEO Y LA CAMARA
-  
- /*   
-    if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia ) {
-  
-      const constraints = { 
-        audio: false,
-        video: { 
-        //width: 1280, 
-        //height: 720,
-        /// by default FullHD (ideal), max. 4k
-        width: { min: 1280, ideal: 1920, max: 4096 },
-        height: { min: 720, ideal: 1080, max: 2160 }, 
-        facingMode: { ideal: "environment" }
-        } 
-      };
-  
-      navigator.mediaDevices.getUserMedia( constraints )
-      .then( 
-        function ( stream ) {
-  
-      // apply the stream to the video element used in the texture
-      // preparo para que se pueda grabar
-  
-          video.srcObject = stream;
-          video.play();
-        } 
-      ).catch( 
-        function ( error ) {
-          console.error( 'Unable to access the camera/webcam.', error );
-          } 
-      );
-    } else {
-  
-        console.error( 'MediaDevices interface not available.' );
-  
-    }
-  
-*/
 
-  }
+}
   
   
   
-  function animate() {
+function animate() {
   
   requestAnimationFrame( animate );
   renderer.render( scene, camera );
   
-  }
+}
   
 
-  init();
-  animate();
+//init();
+//animate();
 
 
 
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
-var mediaRecorder;
-var recordedBlobs;
-var sourceBuffer;
-
-var gumVideo = document.querySelector('video#gum');
-var recordedVideo = document.querySelector('video#recorded');
-
-var recordButton = document.querySelector('button#record');
-var playButton = document.querySelector('button#play');
-var downloadButton = document.querySelector('button#download');
-
 
 recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
 
-console.log(location.host);
+//console.log(location.host);
 // window.isSecureContext could be used for Chrome
-var isSecureOrigin = location.protocol === 'https:' ||
-  location.host.includes('localhost');
-if (!isSecureOrigin) {
-  alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
-    '\n\nChanging protocol to HTTPS');
-  location.protocol = 'HTTPS';
-}
+//var isSecureOrigin = location.protocol === 'https:' ||
+//  location.host.includes('localhost');
+// if (!isSecureOrigin) {
+//  alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
+//    '\n\nChanging protocol to HTTPS');
+//  location.protocol = 'HTTPS';
+// }
 
 
-/*
-var constraints = {
-  audio: true,
-  video: true
-};
-*/
 const constraints = { 
     audio: false,
     video: { 
-    //width: 1280, 
-    //height: 720,
+
     /// by default FullHD (ideal), max. 4k
     width: { min: 1280, ideal: 1920, max: 4096 },
     height: { min: 720, ideal: 1080, max: 2160 }, 
@@ -177,10 +134,7 @@ navigator.mediaDevices.getUserMedia(
 
 function successCallback(stream) {
   console.log('getUserMedia() got stream: ', stream);
-  window.stream = stream;
   gumVideo.srcObject = stream;
-  video.srcObject = stream;
-  video.play();
 }
 
 function errorCallback(error) {
@@ -189,7 +143,7 @@ function errorCallback(error) {
 
 function handleSourceOpen(event) {
   console.log('MediaSource opened');
-  sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+  sourceBuffer = mediaSource.addSourceBuffer('video/mp4');
   console.log('Source buffer: ', sourceBuffer);
 }
 
@@ -205,7 +159,7 @@ function handleStop(event) {
 }
 
 function toggleRecording() {
-  if (recordButton.textContent === 'Start Recording') {
+  if (recordButton.textContent === 'Rec') {
     startRecording();
   } else {
     stopRecording();
@@ -215,19 +169,16 @@ function toggleRecording() {
   }
 }
 
-// The nested try blocks will be simplified when Chrome 47 moves to Stable
 function startRecording() {
   //var options = {mimeType: 'video/mp4'};
   recordedBlobs = [];
   try {
-    //mediaRecorder = new MediaRecorder(window.stream, options);
-    mediaRecorder = new MediaRecorder(window.stream);
+    mediaRecorder = new MediaRecorder(gumVideo.srcObject);
   } catch (e0) {
-    // console.log('Unable to create MediaRecorder with options Object: ', options, e0);
+   
     console.log('Unable to create MediaRecorder with options Object: ', e0);
     }
-  
-  //console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+
   console.log('Created MediaRecorder', mediaRecorder);
   
   recordButton.textContent = 'Stop Recording';
