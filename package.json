@@ -24,21 +24,17 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "lapsimlogoscam",
-            "authors": "MedicalBit",
-            "exe": "LapSimCam",
-            "iconUrl":"./logo-medicalbit.ico",
-            "setupExe": "MedicalBitSetup",
-            "setupIcon": "logo-medicalbit.ico"
+            "name": "lapsimlogoscam"
+           
           }
         },
         {
           "name": "@electron-forge/maker-zip",
-          /*
+        
           "platforms": [
             "darwin"
           ]
-          */
+          
         },
         {
           "name": "@electron-forge/maker-deb",
