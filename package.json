@@ -24,26 +24,13 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-<<<<<<< HEAD
-=======
-            "name": "lapsimlogoscam"
-           
->>>>>>> 8dd1e674c87f926c9a0d3a171e1fd2f27ead0e82
           }
         },
         {
           "name": "@electron-forge/maker-zip",
-<<<<<<< HEAD
           "platforms": [
             "darwin"
           ]
-=======
-        
-          "platforms": [
-            "darwin"
-          ]
-          
->>>>>>> 8dd1e674c87f926c9a0d3a171e1fd2f27ead0e82
         },
         {
           "name": "@electron-forge/maker-deb",
