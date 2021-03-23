@@ -18,15 +18,27 @@ var recordedVideo = document.querySelector('video#recorded');
 var recordButton = document.getElementById('record');
 var playButton = document.getElementById('play');
 var downloadButton = document.getElementById('download');
+var camaraButton = document.getElementById("camara");
+//var listaCamara= [];
 
+/*
+const constraints = { 
+  audio: false,
+  video: { 
 
+  /// by default FullHD (ideal), max. 4k
+  width: { min: 1280, ideal: 1920, max: 4096 },
+  height: { min: 720, ideal: 1080, max: 2160 } 
+  //facingMode: { ideal: "environment" }
+  } 
+};
+*/
 
 
 function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    
+    camera.updateProjectionMatrix();  
     renderer.setSize( window.innerWidth, window.innerHeight );
     
     }
@@ -102,6 +114,7 @@ mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
 recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
+camaraButton.onclick = elegirCamara;
 
 //console.log(location.host);
 // window.isSecureContext could be used for Chrome
@@ -114,27 +127,94 @@ downloadButton.onclick = download;
 // }
 
 
-const constraints = { 
-    audio: false,
-    video: { 
 
-    /// by default FullHD (ideal), max. 4k
-    width: { min: 1280, ideal: 1920, max: 4096 },
-    height: { min: 720, ideal: 1080, max: 2160 }, 
-    facingMode: { ideal: "environment" }
-    } 
-};
 
-navigator.mediaDevices.getUserMedia(
-  constraints
-).then(
-  successCallback,
-  errorCallback
-);
+
+
+
+
+function elegirCamara () {
+  var listaCamara= [];
+  
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+    console.log("enumerateDevices() not supported.");
+    return;
+  }
+  
+  // List cameras and microphones.
+  
+navigator.mediaDevices.enumerateDevices()
+  .then(function(devices) {
+    
+    devices.forEach( 
+      function(device) {      
+        if (device.kind === "videoinput"){
+          listaCamara.push(device.deviceId);     
+        }
+
+        console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
+      });
+
+    listaCamara.forEach((e) => {console.log("Entradas de Video disponibles"+ e)});
+    
+  }).then(()=>{
+
+    //console.log("Tamaño de la lista " + listaCamara.length);
+
+
+    if (camaraButton.textContent === 'Camara 1') {
+      camaraButton.textContent = 'Camara 2';
+      //console.log('## Pido la camara 1: ' + listaCamara[0]);
+      setCamara(listaCamara[0]);
+    } else {
+      camaraButton.textContent = 'Camara 1';
+      //console.log('# Pido la camara 2: ' + listaCamara[1]);
+      setCamara(listaCamara[1]);
+      
+    }
+
+  })
+  .catch(function(err) {
+    console.log(err.name + ": " + err.message);
+  });
+
+  
+}
+
+function setCamara (id){
+  
+
+  console.log( "camara id a pedir "+ id);
+
+
+  navigator.mediaDevices.getUserMedia(
+    { 
+      audio: false,
+      video: {
+        deviceId: id, 
+    
+      /// by default FullHD (ideal), max. 4k
+      //width: { min: 1280, ideal: 1920, max: 4096 },
+      //height: { min: 720, ideal: 1080, max: 2160 } 
+      
+      } 
+    }
+  ).then(
+    successCallback,
+    errorCallback
+  );
+  
+
+
+
+}
+
 
 function successCallback(stream) {
   console.log('getUserMedia() got stream: ', stream);
   gumVideo.srcObject = stream;
+  
 }
 
 function errorCallback(error) {
@@ -163,7 +243,7 @@ function toggleRecording() {
     startRecording();
   } else {
     stopRecording();
-    recordButton.textContent = 'Start Recording';
+    recordButton.textContent = 'Rec';
     playButton.disabled = false;
     downloadButton.disabled = false;
   }
