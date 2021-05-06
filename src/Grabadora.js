@@ -1,8 +1,6 @@
-//import * as THREE from './three.module.js';
+
 //const aspect = window.innerWidth / window.innerHeight;
 let container = document.getElementById("container" );
-
-//let camera, scene, renderer;
 
 var mediaRecorder;
 var recordedBlobs;
@@ -43,70 +41,7 @@ function onWindowResize() {
     
     }
   
-  
-  // FUNCION ANIMATE QUE CONTRULLE LA PANTALLA LA ESCENA Y CREA EL VIDEO
-/*  
-function init() {
-  
-    // const aspect = window.innerWidth / window.innerHeight;
-    // let container = document.getElementById( 'container' );
-  
-  
-  
-    // CONFIGS DE LA CAMARA PARA VER LA ESCENA
-    camera = new THREE.PerspectiveCamera( 60, aspect, 0.1, 100 );
-    camera.position.z = 10;
-    camera.position.x = 0;
-    camera.position.y = 0;
-  
-  
-  
-    // CONFIGS DEL PLANO DONDE PROYECTO EL VIDEO
-  
-    const geometry = new THREE.PlaneGeometry( 16, 9 );
-    geometry.scale( 1, 1, 1);
-  
-    const texture = new THREE.VideoTexture( gumVideo );
-    const material = new THREE.MeshBasicMaterial( { map: texture } );
-  
-    const mesh = new THREE.Mesh( geometry, material );
-    mesh.position.set( 0, 0, 0 );
-  
-    mesh.lookAt( camera.position );
-  
-    // CREACION DE LA ESCENA
-  
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xffffff );
-    scene.add( mesh );
-  
-    // ACCIIONES DE RENDERIZADO DE LA ESCENA
-  
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    container.appendChild( renderer.domElement );
-  
-    // ACCIONES DE REAJUSTE EN CASO DE CAMBIAR EL TAMAÑO DE LA ESCENA
-  
-    window.addEventListener( 'resize', onWindowResize );
 
-}
-  
-  
-  
-function animate() {
-  
-  requestAnimationFrame( animate );
-  renderer.render( scene, camera );
-  
-}
-  
-
-//init();
-//animate();
-
-*/
 
 var mediaSource = new MediaSource();
 mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
@@ -163,14 +98,18 @@ navigator.mediaDevices.enumerateDevices()
     //console.log("Tamaño de la lista " + listaCamara.length);
 
 
-    if (camaraButton.textContent === 'Camara 1') {
-      camaraButton.textContent = 'Camara 2';
-      //console.log('## Pido la camara 1: ' + listaCamara[0]);
-      setCamara(listaCamara[0]);
-    } else {
+    if (camaraButton.textContent === 'Start'  ) {
       camaraButton.textContent = 'Camara 1';
-      //console.log('# Pido la camara 2: ' + listaCamara[1]);
+      recordButton.disabled = false;
+
+    } 
+    if (camaraButton.textContent === 'Camara 2'){
+      camaraButton.textContent = 'Camara 1';
       setCamara(listaCamara[1]);
+    }
+    else{
+      camaraButton.textContent = 'Camara 2';
+      setCamara(listaCamara[0]);
       
     }
 
@@ -194,9 +133,9 @@ function setCamara (id){
       video: {
         deviceId: id, 
     
-      /// by default FullHD (ideal), max. 4k
-      //width: { min: 1280, ideal: 1920, max: 4096 },
-      //height: { min: 720, ideal: 1080, max: 2160 } 
+      // by default FullHD (ideal), max. 4k
+     // width: { min: 1280, ideal: 1920, max: 4096 },
+     // height: { min: 720, ideal: 1080, max: 2160 } 
       
       } 
     }
@@ -279,6 +218,7 @@ function play() {
   var type = (recordedBlobs[0] || {}).type;
   var superBuffer = new Blob(recordedBlobs, {type});
   recordedVideo.src = window.URL.createObjectURL(superBuffer);
+ 
 }
 
 function download() {
