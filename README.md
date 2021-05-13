@@ -1,4 +1,4 @@
-# LapSimLogosCam
+# LapSimCam
 app de visualizacion de camara endoscopiica
 
 para instalar utiliza el paquete nodeJS-electron
