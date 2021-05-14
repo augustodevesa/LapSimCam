@@ -5,6 +5,8 @@ let container = document.getElementById("container" );
 var mediaRecorder;
 var recordedBlobs;
 var sourceBuffer;
+var  recordedVideo;
+ 
 
 var gumVideo = document.querySelector('video#gum');
 var recordButton = document.getElementById('record');
@@ -201,17 +203,20 @@ function startRecording() {
   mediaRecorder.ondataavailable = handleDataAvailable;
   mediaRecorder.start(10); // collect 10ms of data
   console.log('MediaRecorder started', mediaRecorder);
+  
+ 
 }
 
 function stopRecording() {
   mediaRecorder.stop();
-  recordedVideo.controls = true;
+  
 }
 
 function play() {
   var type = (recordedBlobs[0] || {}).type;
   var superBuffer = new Blob(recordedBlobs, {type});
   recordedVideo.src = window.URL.createObjectURL(superBuffer);
+  recordedVideo.controls = true;
  
 }
 
