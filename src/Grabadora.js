@@ -7,16 +7,10 @@ var recordedBlobs;
 var sourceBuffer;
 
 var gumVideo = document.querySelector('video#gum');
-var recordedVideo = document.querySelector('video#recorded');
-
-//var recordButton = document.querySelector('button#record');
-//var playButton = document.querySelector('button#play');
-//var downloadButton = document.querySelector('button#download');
-
 var recordButton = document.getElementById('record');
 var playButton = document.getElementById('play');
 var downloadButton = document.getElementById('download');
-var camaraButton = document.getElementById("camara");
+var camaraButton = document.getElementById('camara');
 //var listaCamara= [];
 
 /*
