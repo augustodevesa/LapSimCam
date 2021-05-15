@@ -78,7 +78,8 @@ footer {
 button {
   padding-left: 2px;
   padding-right: 2px;
-  width: 150px;
+  padding-bottom: 4px;
+  width: 110px;
   height: 40px;
   display: block;
   margin-left: auto;
@@ -88,6 +89,7 @@ button {
 
 
 video {
+  padding-top: 3mm;
   width: 100%;
   height: 100%;
   vertical-align:middle;

@@ -20,39 +20,31 @@
     <nav class="navbar navbar-inverse" >
       <div class="container-fluid">
         <div class="navbar-header">
-          <img src="logo-medicalbit.ico" class="navbar-brand img-responsive" style="height:90px;width: auto;">
-         
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar"style="height:90px;width: auto;" >
+          
+          <button type="button" class="navbar-toggle navbar-right" data-toggle="collapse" data-target="#myNavbar" >
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>                        
           </button>
+          <img src="logo-medicalbit.ico" class="navbar-brand img-responsive" style="height: 70px;width: 130px;">
+
+             
         </div>
 
-        <div class="collapse navbar-collapse" id="myNavbar">
-      
-          <ul class="nav navbar-nav">
-            <li><button id="camara" class="btn btn-primary" style="height:90px; width:120px;">Start</button></li>
-            <li><button id="record" class="btn btn-primary" disabled style="height:90px; width:120px;">Rec</button> </li>
-            <li><button id="play" class="btn btn-primary" disabled style="height:90px; width:120px; display: none;">Play</button></li>
-            <li><button id="download" class="btn btn-primary" disabled style="height:90px; width:120px;">Guardar</button></li>
-          </ul>
-       </div>
 
       </div>
     </nav>
-  <div class="container">
+    <div class="collapse navbar-collapse" id="myNavbar" style="margin-left: auto;margin-right: auto;">
+      <div class="nav navbar-nav"  >
+        <button id="camara" class="btn btn-primary" >Start</button>
+        <button id="record" class="btn btn-primary" disabled >Rec</button>
+        <button id="play" class="btn btn-primary" disabled style="display: none;">Play</button>
+        <button id="download" class="btn btn-primary" disabled>Guardar</button>
+      </div>
+    </div>
+  <div class="container" id="container">
     <video id="gum" autoplay muted playsinline ></video>
   </div>  
-
-
-
-  <div class="container-fluid">
-    <div class="row content">
-      <div class="col-sm-2"></div>
-      <div id="container" class="col-sm-10"></div>
-    </div>
-  </div>
 
 <footer class="container-fluid"> </footer>
 
