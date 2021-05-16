@@ -7,6 +7,8 @@
     <meta name="CamViewer" content="Visualizador de Camara Endoscópica">
     <link rel="stylesheet" href="CamRecStyle.css" type="text/css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -17,36 +19,28 @@
     
     <script type="module" src="Grabadora.js"></script>
     
-    <nav class="navbar navbar-inverse" >
-      <div class="container-fluid">
-        <div class="navbar-header">
-          
-          <button type="button" class="navbar-toggle navbar-right" data-toggle="collapse" data-target="#myNavbar" >
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>                        
-          </button>
-          <img src="logo-medicalbit.ico" class="navbar-brand img-responsive" style="height: 70px;width: 130px;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" >
+      <a class="navbar-brand" href="#">
+        <img src="logo-medicalbit.ico" class="navbar-brand img-responsive" >
+      </a>
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#myNavbar">
+        <span class="navbar-toggler-icon"></span> 
+      </button>
 
-             
-        </div>
-
-
-      </div>
     </nav>
-    <div class="collapse navbar-collapse" id="myNavbar" style="margin-left: auto;margin-right: auto;">
-      <div class="nav navbar-nav"  >
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <div class="d-flex flex-row"  >
         <button id="camara" class="btn btn-primary" >Start</button>
         <button id="record" class="btn btn-primary" disabled >Rec</button>
         <button id="play" class="btn btn-primary" disabled style="display: none;">Play</button>
         <button id="download" class="btn btn-primary" disabled>Guardar</button>
       </div>
     </div>
-  <div class="container" id="container">
+  <div class="container-fluid" id="container">
     <video id="gum" autoplay muted playsinline ></video>
   </div>  
 
-<footer class="container-fluid"> </footer>
+<footer class="footer container-fluid"> </footer>
 
 </body>
 
