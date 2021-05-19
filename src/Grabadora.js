@@ -10,7 +10,7 @@ var  recordedVideo;
 
 var gumVideo = document.querySelector('video#gum');
 var recordButton = document.getElementById('record');
-var playButton = document.getElementById('play');
+var playButton = document.getElementById('reproduce');
 var downloadButton = document.getElementById('download');
 var camaraButton = document.getElementById('camara');
 //var listaCamara= [];

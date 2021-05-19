@@ -18,6 +18,7 @@
   <body class="htmlNoPages">
     
     <script type="module" src="Grabadora.js"></script>
+    <script type="module" src="Cronometro.js"></script>
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light" >
       
@@ -30,12 +31,24 @@
 
     </nav>
     <div class="collapse navbar-collapse" id="myNavbar">
-      <div class="d-flex flex-row justify-content-center"  >
-        <button id="camara" class="btn btn-primary" >Start</button>
-        <button id="record" class="btn btn-primary" disabled >Rec</button>
-        <button id="play" class="btn btn-primary" disabled style="display: none;">Play</button>
-        <button id="download" class="btn btn-primary" disabled>Guardar</button>
+      
+      <div class="d-flex mb-2 align-items-center" id="cronometro">
+        <div class="btn-group-sm">
+          <button id="camara" class="btn btn-primary" >Start</button>
+          <button class="btn btn-secondary" id="start" >Play</button>
+          <button class="btn btn-secondary" id="pause" >Pause</button>
+          <button class="btn btn-secondary" id="reset" >Reset</button>
+          <button id="record" class="btn btn-danger" disabled >Rec</button>
+          <button id="download" class="btn btn-success" disabled>Guardar</button>
+          <button id="reproduce" class="btn btn-secondary" disabled style="display: none;"></button>
+        </div>
+        
+        
+        <div class="m-auto h1" id="data-chronometer">00:00:00</div>
+        
+
       </div>
+      
     </div>
   <div class="container-fluid" id="container">
     <video id="gum" autoplay muted playsinline ></video>
