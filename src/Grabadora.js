@@ -5,15 +5,15 @@ let container = document.getElementById("container" );
 var mediaRecorder;
 var recordedBlobs;
 var sourceBuffer;
-var  recordedVideo;
- 
+var recordedVideo;
 
 var gumVideo = document.querySelector('video#gum');
 var recordButton = document.getElementById('record');
 var playButton = document.getElementById('reproduce');
 var downloadButton = document.getElementById('download');
 var camaraButton = document.getElementById('camara');
-//var listaCamara= [];
+
+var camaras= getCamaras();
 
 /*
 const constraints = { 
@@ -45,7 +45,7 @@ mediaSource.addEventListener('sourceopen', handleSourceOpen, false);
 recordButton.onclick = toggleRecording;
 playButton.onclick = play;
 downloadButton.onclick = download;
-camaraButton.onclick = elegirCamara;
+camaraButton.onclick = selectCamara;
 
 //console.log(location.host);
 // window.isSecureContext could be used for Chrome
@@ -64,9 +64,8 @@ camaraButton.onclick = elegirCamara;
 
 
 
-function elegirCamara () {
-  var listaCamara= [];
-  
+function getCamaras () {
+  var listCamaras =[];
 
   if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
     console.log("enumerateDevices() not supported.");
@@ -75,25 +74,27 @@ function elegirCamara () {
   
   // List cameras and microphones.
   
-navigator.mediaDevices.enumerateDevices()
+  navigator.mediaDevices.enumerateDevices()
   .then(function(devices) {
     
     devices.forEach( 
       function(device) {      
         if (device.kind === "videoinput"){
-          listaCamara.push(device.deviceId);     
+          listCamaras.push(device.deviceId);     
         }
 
         console.log(device.kind + ": " + device.label + " id = " + device.deviceId);
       });
 
-    listaCamara.forEach((e) => {console.log("Entradas de Video disponibles"+ e)});
+    listCamaras.forEach((e) => {console.log("Entradas de Video disponibles"+ e)});
     
-  }).then(()=>{
+  })
+  /*
+  .then(()=>{
 
     //console.log("Tamaño de la lista " + listaCamara.length);
 
-
+     
     if (camaraButton.textContent === 'Start'  ) {
       camaraButton.textContent = 'Camara 1';
       recordButton.disabled = false;
@@ -101,20 +102,41 @@ navigator.mediaDevices.enumerateDevices()
     } 
     if (camaraButton.textContent === 'Camara 2'){
       camaraButton.textContent = 'Camara 1';
-      setCamara(listaCamara[1]);
+      setCamara(Camaras[1]);
     }
     else{
       camaraButton.textContent = 'Camara 2';
-      setCamara(listaCamara[0]);
+      setCamara(Camaras[0]);
       
     }
-
   })
+  */
+
   .catch(function(err) {
     console.log(err.name + ": " + err.message);
   });
 
+  return listCamaras;
   
+}
+
+function selectCamara () {
+  let i;
+
+  if (camaraButton.textContent === 'Start'  ) {
+    camaraButton.textContent = 'Switch Cam';
+    
+    recordButton.disabled = false;
+    setCamara(camaras[0]);
+  } 
+  if (camaraButton.textContent === 'Switch Cam'){
+    i=1;
+    if (i < camaras.length)
+      setCamara(i);
+    i++;
+  }
+  
+    
 }
 
 function setCamara (id){
